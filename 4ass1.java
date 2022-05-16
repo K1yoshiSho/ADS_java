@@ -1,34 +1,29 @@
 import java.awt.*;
-import java.io.Serial;
 import java.util.ArrayList;
 
 import javax.swing.*;
 
 public class Main extends JPanel {
-        @Serial
-        private static final long serialVersionUID = 1L;
-        private final BST<Integer> tree; // A binary tree to be displayed
-        private final JTextField jtfKey = new JTextField(5);
+        private final BST<Integer> tree;
+        private final JTextField jtfKey = new JTextField(4);
         private final TreeView view = new TreeView();
-        private final JButton jbtInsert = new JButton("Insert");
-        private final JButton jbtDelete = new JButton("Delete");
-        private final JButton jbtShow1 = new JButton("Show Inorder");
-        private final JButton jbtShow2 = new JButton("Show Preorder");
-        private final JButton jbtShow3 = new JButton("Show Postorder");
+        private final Button jbtInsert = new Button("Insert");
+        private final Button jbtDelete = new Button("Delete");
+        private final Button jbtShow1 = new Button("Show Inorder");
+        private final Button jbtShow2 = new Button("Show Preorder");
+        private final Button jbtShow3 = new Button("Show Postorder");
 
         public static void main(String[] args) {
-                JFrame frame = new JFrame("Exercise13");
-                JApplet applet = new DisplayBST();
+                JFrame frame = new JFrame("Main");
+                DisplayBST applet = new DisplayBST();
                 frame.add(applet);
-                frame.setSize(700, 300);
+                frame.setSize(1000, 500);
                 frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
                 frame.setLocationRelativeTo(null);
                 frame.setVisible(true);
         }
 
         static class DisplayBST extends JApplet {
-                @Serial
-                private static final long serialVersionUID = 1L;
                 public DisplayBST() {
                         add(new Main(new BST<>(new Integer[]{45, 1, 5, 7, 43, 452})));
                 }
@@ -51,7 +46,7 @@ public class Main extends JPanel {
                 panel.add(jbtShow2);
                 panel.add(jbtShow3);
                 add(panel, BorderLayout.SOUTH);
-                
+
                 jbtInsert.addActionListener(e -> {
                         int key = Integer.parseInt(jtfKey.getText());
                         if (tree.search(key)) { // key is in the tree already
@@ -62,9 +57,8 @@ public class Main extends JPanel {
                                 view.repaint(); // Redisplay the tree
                         }
                 });
-
-                // Process the Delete button event
-                jbtDelete.addActionListener(e -> {
+                
+                jbtDelete.addActionListener(e -> { // Process the Delete button event
                         int key = Integer.parseInt(jtfKey.getText());
                         if (!tree.search(key)) { // key is not in the tree
                                 JOptionPane.showMessageDialog(null, key + " is not in the tree");
@@ -102,32 +96,25 @@ public class Main extends JPanel {
                         }
                         JOptionPane.showMessageDialog(null, showString.toString());
                 });
-
         }
-
-        // Inner class TreeView for displaying a tree on a panel
-        class TreeView extends JPanel {
-                @Serial
-                private static final long serialVersionUID = 1L;
+        
+        class TreeView extends JPanel { // Inner class TreeView for displaying a tree on a panel
                 private final int radius = 20; // Tree node radius
                 private final int vGap = 50; // Gap between two levels in a tree
 
                 @Override
                 protected void paintComponent(Graphics g) {
                         super.paintComponent(g);
-
                         if (tree.getRoot() != null) {
                                 // Display tree recursively
                                 displayTree(g, tree.getRoot(), getWidth() / 2, 30, getWidth() / 4);
                         }
                 }
-                
+
                 private void displayTree(Graphics g, BST.TreeNode<Integer> root, int x,
                                          int y, int hGap) {
-
                         g.drawOval(x - radius, y - radius, 2 * radius, 2 * radius);
                         g.drawString(root.element + "", x - 6, y + 4);
-
                         if (root.left != null) {
                                 // Draw a line to the left node
                                 connectTwoCircles(g, x - hGap, y + vGap, x, y);
@@ -142,9 +129,8 @@ public class Main extends JPanel {
                                 displayTree(g, root.right, x + hGap, y + vGap, hGap / 2);
                         }
                 }
-                
-                private void connectTwoCircles(Graphics g, int x1, int y1, int x2,
-                                               int y2) {
+
+                private void connectTwoCircles(Graphics g, int x1, int y1, int x2, int y2) {
                         double d = Math.sqrt(vGap * vGap + (x2 - x1) * (x2 - x1));
                         int x11 = (int) (x1 - radius * (x1 - x2) / d);
                         int y11 = (int) (y1 - radius * (y1 - y2) / d);
@@ -157,7 +143,7 @@ public class Main extends JPanel {
         static class BST<E extends Comparable<E>> extends AbstractTree<E> {
                 protected TreeNode<E> root;
                 protected int size = 0;
-                
+
                 public BST(E[] objects) {
                         for (E object : objects) insert(object);
                 }
@@ -200,7 +186,6 @@ public class Main extends JPanel {
                                 else
                                         parent.right = createNewNode(e);
                         }
-
                         size++;
                 }
 
@@ -260,7 +245,7 @@ public class Main extends JPanel {
                                 element = e;
                         }
                 }
-                
+
                 public TreeNode<E> getRoot() {
                         return root;
                 }
@@ -332,11 +317,11 @@ public class Main extends JPanel {
                         public InorderIterator() {
                                 inorder(); // Traverse binary tree and store elements in list
                         }
-                        
+
                         private void inorder() {
                                 inorder(root);
                         }
-                        
+
                         private void inorder(TreeNode<E> root) {
                                 if (root == null)
                                         return;
